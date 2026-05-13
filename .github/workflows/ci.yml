@@ -1,0 +1,75 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Pipeline CI/CD — Castellanos Post-2 U12
+# Automatiza: compilación, pruebas, cobertura JaCoCo y publicación en Docker Hub
+# ─────────────────────────────────────────────────────────────────────────────
+name: CI/CD — Build, Test & Docker Publish
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ── Job 1: Compilar y ejecutar pruebas con reporte de cobertura ────────────
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21 con cache Maven
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      - name: Compilar y ejecutar pruebas con cobertura
+        run: mvn clean verify
+
+      # Publica el reporte JaCoCo como artefacto descargable en GitHub Actions
+      - name: Publicar reporte JaCoCo como artefacto
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+          retention-days: 7
+
+  # ── Job 2: Construir y publicar imagen Docker en Docker Hub ────────────────
+  # Solo se ejecuta en push a main (no en pull requests)
+  # Depende del exito del job build-and-test
+  docker-publish:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: Checkout del codigo
+        uses: actions/checkout@v4
+
+      # Autenticacion segura usando GitHub Secrets (nunca credenciales en YAML)
+      - name: Autenticarse en Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Genera tags automaticos: latest + sha-<commit_corto>
+      - name: Extraer metadata para tags de imagen
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/castellanos-post2-u12
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-,format=short
+
+      # Construye la imagen con el Dockerfile multi-stage y la publica
+      - name: Construir y publicar imagen Docker
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
