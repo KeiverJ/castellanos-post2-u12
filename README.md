@@ -167,18 +167,18 @@ docker run -p 8080:8080 -e SPRING_PROFILES_ACTIVE=dev keiverj/castellanos-post2-
 
 La suite de pruebas incluye **9 tests de integracion** que cubren:
 
-| Prueba | Descripcion | Estado |
-|--------|-------------|--------|
-| `contextLoads` | Verifica que el contexto Spring se carga correctamente | ✅ |
-| `debeResponderPaginaRaiz` | Valida respuesta del endpoint raiz | ✅ |
-| `debeResponderHealthEnEstadoUp` | Comprueba que el actuator reporta UP | ✅ |
-| `debeListarProductosSembrados` | Verifica listado de productos sembrados | ✅ |
-| `debeObtenerProductoPorId` | Obtiene un producto existente por ID | ✅ |
-| `debeCrearUnProductoNuevo` | Crea un producto y valida respuesta 201 | ✅ |
-| `debeActualizarUnProductoExistente` | Actualiza un producto y valida cambios | ✅ |
-| `debeEliminarUnProductoExistente` | Elimina un producto y valida respuesta 204 | ✅ |
-| `debeRetornar404CuandoProductoNoExiste` | Valida respuesta 404 para ID inexistente | ✅ |
-| `debeRetornar400CuandoDatosInvalidos` | Valida respuesta 400 para datos invalidos | ✅ |
+| Prueba | Descripcion |
+|--------|-------------|
+| `contextLoads` | Verifica que el contexto Spring se carga correctamente |
+| `debeResponderPaginaRaiz` | Valida respuesta del endpoint raiz |
+| `debeResponderHealthEnEstadoUp` | Comprueba que el actuator reporta UP |
+| `debeListarProductosSembrados` | Verifica listado de productos sembrados |
+| `debeObtenerProductoPorId` | Obtiene un producto existente por ID |
+| `debeCrearUnProductoNuevo` | Crea un producto y valida respuesta 201 |
+| `debeActualizarUnProductoExistente` | Actualiza un producto y valida cambios |
+| `debeEliminarUnProductoExistente` | Elimina un producto y valida respuesta 204 |
+| `debeRetornar404CuandoProductoNoExiste` | Valida respuesta 404 para ID inexistente |
+| `debeRetornar400CuandoDatosInvalidos` | Valida respuesta 400 para datos invalidos |
 
 El reporte de cobertura JaCoCo se genera automaticamente con `mvn clean verify` y queda disponible como artefacto descargable en la pestana Actions de GitHub.
 
