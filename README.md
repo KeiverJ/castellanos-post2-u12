@@ -49,6 +49,10 @@ El job `docker-publish` depende del exito de `build-and-test` mediante `needs: b
 if: github.ref == 'refs/heads/main' && github.event_name == 'push'
 ```
 
+### Evidencia: Ejecucion Exitosa del Pipeline
+
+![Ejecucion exitosa en GitHub Actions](capturas/github-actions-ejecucion-exitosa.png)
+
 ---
 
 ## GitHub Secrets Requeridos
@@ -63,6 +67,10 @@ Para que el pipeline funcione, se deben configurar los siguientes Secrets en el 
 | `DOCKERHUB_TOKEN` | Access Token de Docker Hub (no la contrasena) | `dckr_pat_xxxxx` |
 
 > **Nota:** El Access Token se genera en [Docker Hub > Account Settings > Security > New Access Token](https://hub.docker.com/settings/security) con permisos de lectura y escritura.
+
+### Evidencia: Secrets Configurados
+
+![Secrets configurados en GitHub](capturas/github-secrets-configurados.png)
 
 ---
 
@@ -182,6 +190,14 @@ La suite de pruebas incluye **9 tests de integracion** que cubren:
 
 El reporte de cobertura JaCoCo se genera automaticamente con `mvn clean verify` y queda disponible como artefacto descargable en la pestana Actions de GitHub.
 
+### Evidencia: Artefacto JaCoCo en GitHub Actions
+
+![Artefacto JaCoCo descargable](capturas/github-actions-artefacto-jacoco.png)
+
+### Evidencia: Reporte de Cobertura JaCoCo
+
+![Reporte de cobertura JaCoCo](capturas/jacoco-cobertura.png)
+
 ---
 
 ## Imagen Docker
@@ -193,6 +209,10 @@ docker pull keiverj/castellanos-post2-u12:latest
 La imagen se publica automaticamente con dos tags:
 - `latest` — siempre apunta al ultimo build exitoso
 - `sha-<commit>` — tag inmutable vinculado al commit especifico
+
+### Evidencia: Imagen Publicada en Docker Hub
+
+![Imagen publicada en Docker Hub](capturas/dockerhub-imagen-publicada.png)
 
 ---
 
